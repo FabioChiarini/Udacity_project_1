@@ -20,50 +20,34 @@ To check if you did everything correctly, try connecting to the database with *p
 select * from articles
 ```
 
+To run correctly the project requires some predefined views. You need to run the following code to create them:
+
+1) This view query the DB to get the number of 404 NOT FOUND requests on each day of the month
+```
+create view wrong_per_day as select count(status) as num_wrong, (time::date) from log where status = '404 NOT FOUND' group by (time::date);
+```
+
+2) This view query the DB to get the total number of requests on each day of the month
+```
+create view total_per_day as select count(*) as num_total, (time::date) from log group by (time::date);
+```
+3) This view query the DB to get the percentage of 4040 NOT FOUND requests on each day of the month
+```
+create view calculate_percentage as select CAST(num_wrong as float)/CAST(num_total as float)*100.0 as percent, to_char(total.time, 'FMMonth FMDD, yyyy') from (select * from wrong_per_day) as wrong JOIN 
+(select * from total_per_day) as total on wrong.time=total.time;
+```
+
 ## Running the tests
 
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
+Try running the following queries to test if the views are created correctly:
 ```
-Give an example
-```
+select * from wrong_per_day
 
-### And coding style tests
+select * from total_per_day
 
-Explain what these tests test and why
-
-```
-Give an example
+select * from calculate_percentage
 ```
 
-## Deployment
+## Running the program
 
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project has no license
+FInally, from your VM directory, run **python project_1_db.py** to run the program. It will create a text file called results.txt in the same diractory. Open this file in order to see the results of the queries.
