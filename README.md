@@ -50,4 +50,4 @@ select * from calculate_percentage
 
 ## Running the program
 
-FInally, from your VM directory, run **python project_1_db.py** to run the program. It will create a text file called results.txt in the same diractory. Open this file in order to see the results of the queries.
+FInally, from your VM directory, run **python project_1_db.py** to run the program. It will create a text file called results.txt in the same directory. Open this file in order to see the results of the queries.
